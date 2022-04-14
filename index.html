@@ -1,28 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com"> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@800&display=swap" rel="stylesheet">
 
   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
   
   <title>Frontend Mentor | Advice generator app</title>
 
-  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
   <style>
+
+    body{
+      margin: 0;padding: 0;box-sizing: border-box;
+      background-color: hsl(218, 23%, 16%);
+      color: hsl(193, 38%, 86%);
+      height:100vh;
+      font-family: 'Manrope', sans-serif;
+      font-size: 28px;
+    }
+
+    body a{
+      text-decoration: none;
+      color: hsl(150, 100%, 66%);
+    }
+
+    main.advice{
+      padding: 20px;
+      height:92vh;
+      display:flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    main.advice div.advice-group{
+      background-color: hsl(217, 19%, 24%);
+      display:flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding:20px;
+      border-radius: 20px;
+      max-width: 445px;
+    }
+
+    main.advice div.advice-group h4{
+      font-size: 14px;
+      color: hsl(150,100%,66%);
+    }
+
+    main.advice div.advice-group p.advice-text{
+      margin-top:0;
+    }
+
+    main.advice div.advice-group img.image-divider{
+      margin-bottom:60px;
+    }
+
+    main.advice div.image-button{
+      cursor: pointer;
+      background-color: hsl(150,100%,66%);
+      margin-top: -30px;
+      padding: 10px 15px;
+      border-radius: 50%;
+      transition: 400ms ease-in;
+    }
+
+    main.advice div.image-button:hover{
+      box-shadow: 0 0 20px hsl(150,100%,66%);
+    }
+
     .attribution { font-size: 11px; text-align: center; }
     .attribution a { color: hsl(228, 45%, 44%); }
   </style>
 </head>
-<body>
+<body onload = "alterarFrase()">
 
-  Advice #<!-- Advice ID goes here -->
+  <main class="advice">
 
-  "<!-- Advice text goes here -->"
+    <div class="advice-group">
+
+      <h4>Advice #<span class="number-advice"></span> </h4>
+
+      <p class="advice-text"></p>
+
+      <img class="image-divider" src="images/pattern-divider-desktop.svg" alt="divisor contendo duas barras verticais grossas com pontas circulares no meio e uma barra fina de ponta circular  em cada lado dessas primeiras">
+
+  </div>
   
+  <div class="image-button" onclick="alterarFrase()"> <img src="images/icon-dice.svg" alt="botão circular com 4 furos circulares e um fundo verde que solicita a troca da frase"> </div>
+
+  </main>
+
+  <script>
+
+    const numberAdvice = document.querySelector(".number-advice")
+    const adviceText = document.querySelector(".advice-text")
+    const btn = document.querySelector(".image-button")
+    const ultimasFrases = []  //um array que contem ate as ultimas 15 frases solicitadas para que não sejam repetidas
+
+    function alterarFrase(){
+      fetch("https://api.adviceslip.com/advice")
+      .then(response => response.json())
+      .then(data => {
+
+        if(!ultimasFrases.find(element => element == data.slip.id)){
+          ultimasFrases.push(data.slip.id)
+        }else{
+          alterarFrase()
+        }
+
+        numberAdvice.innerText = data.slip.id
+        adviceText.innerText = `"${data.slip.advice}" `
+
+      })
+    }
+
+  </script>
+
   <div class="attribution">
     Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
-    Coded by <a href="#">Your Name Here</a>.
+    Coded by <a href="#">Bruno Santos</a>.
   </div>
 </body>
 </html>
