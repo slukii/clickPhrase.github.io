@@ -10,7 +10,6 @@
   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
   
   <title>Frontend Mentor | Advice generator app</title>
-
   <style>
 
     body{
@@ -25,6 +24,17 @@
     body a{
       text-decoration: none;
       color: hsl(150, 100%, 66%);
+    }
+
+    body img.loading{
+      position: absolute;
+      height: 100vh; width: 100vw;
+      opacity: .8;
+      display: none;
+    }
+
+    body img.loading-open{
+      display: block;
     }
 
     main.advice{
@@ -80,6 +90,9 @@
 </head>
 <body onload = "alterarFrase()">
 
+  <!--img apenas para carregamento enquanto espera resposta da API -->
+  <img class='loading' src="images/a2dc9668f2cf170fe3efeb263128b0e7.gif" alt="4 dots simbolizando carregamento da resposta da frase do dia"></img>
+
   <main class="advice">
 
     <div class="advice-group">
@@ -98,12 +111,16 @@
 
   <script>
 
+    const imagemLoading = document.querySelector(".loading")
     const numberAdvice = document.querySelector(".number-advice")
     const adviceText = document.querySelector(".advice-text")
     const btn = document.querySelector(".image-button")
     const ultimasFrases = []  //um array que contem ate as ultimas 15 frases solicitadas para que não sejam repetidas
 
     function alterarFrase(){
+
+      imagemLoading.classList.add("loading-open")
+
       fetch("https://api.adviceslip.com/advice")
       .then(response => response.json())
       .then(data => {
@@ -116,8 +133,9 @@
 
         numberAdvice.innerText = data.slip.id
         adviceText.innerText = `"${data.slip.advice}" `
-
       })
+
+      setTimeout(() => imagemLoading.classList.remove("loading-open"), 1000); 
     }
 
   </script>
